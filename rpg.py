@@ -163,3 +163,64 @@ class Game:
             Consumable("Health Potion", 20, 10),
             Consumable("Elixir", 50, 25)
 
+]
+        self.available_quests = [
+            Quest("Goblin Menace", "Defeat 3 goblins in the forest.", 100, 50),
+            Quest("Orc Invasion", "Defeat 2 orcs near the village.", 200, 100)
+        ]
+
+    def start(self):
+        print("Welcome to the RPG Game!")
+        player_name = input("Enter your character's name: ")
+        self.player = Player(player_name)
+        self.main_menu()
+
+    def main_menu(self):
+        while self.running:
+            print("\nMain Menu")
+            print("1. Explore")
+            print("2. View Character")
+            print("3. View Inventory")
+            print("4. Visit Shop")
+            print("5. View Quests")
+            print("6. Exit Game")
+            choice = input("Choose an option: ")
+
+            if choice == '1':
+                self.explore()
+            elif choice == '2':
+                self.view_character()
+            elif choice == '3':
+                self.view_inventory()
+            elif choice == '4':
+                self.visit_shop()
+            elif choice == '5':
+                self.view_quests()
+            elif choice == '6':
+                self.exit_game()
+            else:
+                print("Invalid choice. Please try again.")
+
+    def explore(self):
+        print("\nExploring...")
+        encounter_chance = random.randint(1, 100)
+        event_chance = random.randint(1, 100)
+        if event_chance <= 20:
+            self.random_event()
+        elif encounter_chance <= 50:
+            self.encounter_enemy()
+        else:
+            print("You found nothing of interest.")
+
+    def encounter_enemy(self):
+        enemy = self.generate_enemy()
+        print(f"\nA wild {enemy.name} appeared!")
+        while enemy.is_alive() and self.player.is_alive():
+            print(f"\n{self.player.name}: {self.player.health} HP")
+            print(f"{enemy.name}: {enemy.health} HP")
+            print("1. Attack")
+            print("2. Use Special Ability")
+            print("3. Use Item")
+            print("4. Run")
+            choice = input("Choose an action: ")
+
