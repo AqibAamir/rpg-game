@@ -118,3 +118,48 @@ class Player(Character):
         if self.health > 100:
             self.health = 100
 
+
+def accept_quest(self, quest):
+        self.active_quests.append(quest)
+        print(f"You accepted the quest: {quest.name}")
+
+    def complete_quest(self, quest):
+        self.add_gold(quest.reward_gold)
+        self.gain_experience(quest.reward_experience)
+        self.active_quests.remove(quest)
+        print(f"You completed the quest: {quest.name}")
+
+    def use_special_ability(self, ability_name):
+        if ability_name in self.special_abilities:
+            ability = self.special_abilities[ability_name]
+            if ability_name == "Fireball":
+                return ability["damage"]
+            elif ability_name == "Heal":
+                self.health += ability["heal_amount"]
+                if self.health > 100:
+                    self.health = 100
+                return 0
+        else:
+            print("Invalid ability.")
+            return 0
+
+# Define the Enemy class
+class Enemy(Character):
+    def __init__(self, name, health, attack, defense, experience_reward, gold_reward):
+        super().__init__(name, health, attack, defense)
+        self.experience_reward = experience_reward
+        self.gold_reward = gold_reward
+
+# Define the Game class
+class Game:
+    def __init__(self):
+        self.player = None
+        self.running = True
+        self.shop_items = [
+            Weapon("Sword", 5, 50),
+            Weapon("Axe", 7, 70),
+            Armor("Shield", 3, 40),
+            Armor("Helmet", 2, 30),
+            Consumable("Health Potion", 20, 10),
+            Consumable("Elixir", 50, 25)
+
