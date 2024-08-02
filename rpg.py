@@ -224,3 +224,57 @@ class Game:
             print("4. Run")
             choice = input("Choose an action: ")
 
+if choice == '1':
+                damage = self.player.attack_enemy(enemy)
+                print(f"You attacked {enemy.name} for {damage} damage.")
+                if enemy.is_alive():
+                    enemy_damage = enemy.attack_enemy(self.player)
+                    print(f"{enemy.name} attacked you for {enemy_damage} damage.")
+            elif choice == '2':
+                self.use_special_ability()
+            elif choice == '3':
+                self.use_item()
+            elif choice == '4':
+                print("You ran away safely.")
+                return
+            else:
+                print("Invalid choice. Please try again.")
+
+        if not self.player.is_alive():
+            print("You have been defeated!")
+            self.running = False
+        elif not enemy.is_alive():
+            print(f"You defeated {enemy.name}!")
+            self.player.gain_experience(enemy.experience_reward)
+            self.player.add_gold(enemy.gold_reward)
+            print(f"You gained {enemy.experience_reward} experience and {enemy.gold_reward} gold.")
+            self.check_quest_completion(enemy)
+
+    def generate_enemy(self):
+        enemy_types = [
+            ("Goblin", 30, 5, 2, 20, 10),
+            ("Orc", 50, 8, 3, 30, 20),
+            ("Troll", 70, 10, 5, 50, 30),
+            ("Dragon", 100, 15, 10, 100, 50)
+        ]
+        enemy_choice = random.choice(enemy_types)
+        return Enemy(*enemy_choice)
+
+    def random_event(self):
+        events = [
+            ("You found a hidden treasure chest!", 50, 0),
+            ("A mysterious stranger offers you a potion.", 0, 20),
+            ("You stumble upon an abandoned campsite.", 0, 0)
+        ]
+        event = random.choice(events)
+        print(event[0])
+        self.player.add_gold(event[1])
+        self.player.gain_experience(event[2])
+
+    def check_quest_completion(self, defeated_enemy):
+        for quest in self.player.active_quests:
+            if quest.name == "Goblin Menace" and defeated_enemy.name == "Goblin":
+                self.player.complete_quest(quest)
+            elif quest.name == "Orc Invasion" and defeated_enemy.name == "Orc":
+                self.player.complete_quest(quest)
+
