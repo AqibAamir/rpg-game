@@ -328,3 +328,47 @@ def view_character(self):
             self.player.equip_armor(item)
             print(f"You equipped {item.name}.")
 
+
+    def use_special_ability(self):
+        print("\nAvailable Special Abilities:")
+        for idx, (name, details) in enumerate(self.player.special_abilities.items(), start=1):
+            print(f"{idx}. {name}: {details['damage'] if 'damage' in details else details['heal_amount']} (Cost: {details['cost']} MP)")
+        choice = input("Choose an ability: ")
+        if choice.isdigit() and 0 < int(choice) <= len(self.player.special_abilities):
+            ability_name = list(self.player.special_abilities.keys())[int(choice) - 1]
+            ability_cost = self.player.special_abilities[ability_name]["cost"]
+            if self.player.gold >= ability_cost:
+                damage = self.player.use_special_ability(ability_name)
+                if damage > 0:
+                    print(f"You used {ability_name} and dealt {damage} damage.")
+                else:
+                    print(f"You used {ability_name} and healed yourself.")
+                self.player.gold -= ability_cost
+            else:
+                print("Not enough gold to use this ability.")
+        else:
+            print("Invalid choice. Please try again.")
+
+    def visit_shop(self):
+        print("\nWelcome to the Shop!")
+        print("Your Gold:", self.player.gold)
+        for idx, item in enumerate(self.shop_items):
+            print(f"{idx + 1}. {item} - {item.effect}")
+        print("Select an item number to buy or 0 to go back:")
+        choice = input("Choose an item: ")
+        if choice.isdigit() and 0 < int(choice) <= len(self.shop_items):
+            self.buy_item(int(choice) - 1)
+        elif choice == '0':
+            return
+        else:
+            print("Invalid choice. Please try again.")
+
+    def buy_item(self, item_index):
+        item = self.shop_items[item_index]
+        if self.player.gold >= item.cost:
+            self.player.gold -= item.cost
+            self.player.add_item(item)
+            print(f"You bought {item.name} for {item.cost} gold.")
+        else:
+            print("You don't have enough gold.")
+
