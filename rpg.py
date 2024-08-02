@@ -278,3 +278,53 @@ if choice == '1':
             elif quest.name == "Orc Invasion" and defeated_enemy.name == "Orc":
                 self.player.complete_quest(quest)
 
+def view_character(self):
+        print(f"\nCharacter Information:")
+        print(f"Name: {self.player.name}")
+        print(f"Level: {self.player.level}")
+        print(f"Health: {self.player.health}")
+        print(f"Attack: {self.player.attack}")
+        print(f"Defense: {self.player.defense}")
+        print(f"Experience: {self.player.experience}/{self.player.experience_to_next_level}")
+        print(f"Gold: {self.player.gold}")
+        if self.player.equipped_weapon:
+            print(f"Equipped Weapon: {self.player.equipped_weapon.name}")
+        if self.player.equipped_armor:
+            print(f"Equipped Armor: {self.player.equipped_armor.name}")
+
+    def view_inventory(self):
+        print("\nInventory:")
+        if self.player.inventory:
+            self.player.inventory.sort(key=lambda item: item.name)
+            for idx, item in enumerate(self.player.inventory):
+                print(f"{idx + 1}. {item}")
+            print("Select an item number to use or 0 to go back:")
+            choice = input("Choose an item: ")
+            if choice.isdigit() and 0 < int(choice) <= len(self.player.inventory):
+                self.use_item(int(choice) - 1)
+            elif choice == '0':
+                return
+            else:
+                print("Invalid choice. Please try again.")
+        else:
+            print("Your inventory is empty.")
+
+    def use_item(self, item_index=None):
+        if item_index is None:
+            item_index = input("Enter the item number to use: ")
+            if not item_index.isdigit() or not (0 < int(item_index) <= len(self.player.inventory)):
+                print("Invalid item number.")
+                return
+            item_index = int(item_index) - 1
+        item = self.player.inventory[item_index]
+        if isinstance(item, Consumable):
+            self.player.use_consumable(item)
+            self.player.inventory.pop(item_index)
+            print(f"You used {item.name} and restored {item.heal_amount} HP.")
+        elif isinstance(item, Weapon):
+            self.player.equip_weapon(item)
+            print(f"You equipped {item.name}.")
+        elif isinstance(item, Armor):
+            self.player.equip_armor(item)
+            print(f"You equipped {item.name}.")
+
