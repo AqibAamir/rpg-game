@@ -372,3 +372,28 @@ def view_character(self):
         else:
             print("You don't have enough gold.")
 
+
+def view_quests(self):
+        print("\nAvailable Quests:")
+        for idx, quest in enumerate(self.available_quests):
+            print(f"{idx + 1}. {quest}")
+        print("\nActive Quests:")
+        for quest in self.player.active_quests:
+            print(f"- {quest}")
+        print("Select a quest number to accept or 0 to go back:")
+        choice = input("Choose a quest: ")
+        if choice.isdigit() and 0 < int(choice) <= len(self.available_quests):
+            self.player.accept_quest(self.available_quests[int(choice) - 1])
+        elif choice == '0':
+            return
+        else:
+            print("Invalid choice. Please try again.")
+
+    def exit_game(self):
+        print("Thank you for playing!")
+        self.running = False
+
+if __name__ == "__main__":
+    game = Game()
+    game.start()
+
