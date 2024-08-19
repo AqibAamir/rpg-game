@@ -1,4 +1,4 @@
-mport random
+import random
 
 # Define the Item class
 class Item:
@@ -56,8 +56,7 @@ class Character:
     def is_alive(self):
         return self.health > 0
 
-
-   def attack_enemy(self, enemy):
+    def attack_enemy(self, enemy):
         damage = self.attack - enemy.defense
         if damage < 0:
             damage = 0
@@ -118,8 +117,7 @@ class Player(Character):
         if self.health > 100:
             self.health = 100
 
-
-def accept_quest(self, quest):
+    def accept_quest(self, quest):
         self.active_quests.append(quest)
         print(f"You accepted the quest: {quest.name}")
 
@@ -162,8 +160,7 @@ class Game:
             Armor("Helmet", 2, 30),
             Consumable("Health Potion", 20, 10),
             Consumable("Elixir", 50, 25)
-
-]
+        ]
         self.available_quests = [
             Quest("Goblin Menace", "Defeat 3 goblins in the forest.", 100, 50),
             Quest("Orc Invasion", "Defeat 2 orcs near the village.", 200, 100)
@@ -223,26 +220,36 @@ class Game:
             print("3. Use Item")
             print("4. Run")
             choice = input("Choose an action: ")
+            self.handle_choice(choice, enemy)
 
-if choice == '1':
-                damage = self.player.attack_enemy(enemy)
-                print(f"You attacked {enemy.name} for {damage} damage.")
-                if enemy.is_alive():
-                    enemy_damage = enemy.attack_enemy(self.player)
-                    print(f"{enemy.name} attacked you for {enemy_damage} damage.")
-            elif choice == '2':
-                self.use_special_ability()
-            elif choice == '3':
-                self.use_item()
-            elif choice == '4':
-                print("You ran away safely.")
-                return
-            else:
-                print("Invalid choice. Please try again.")
-
+    def handle_choice(self, choice, enemy):
+        if choice == '1':
+            damage = self.player.attack_enemy(enemy)
+            print(f"You attacked {enemy.name} for {damage} damage.")
+            
+            if enemy.is_alive():
+                enemy_damage = enemy.attack_enemy(self.player)
+                print(f"{enemy.name} attacked you for {enemy_damage} damage.")
+        
+        elif choice == '2':
+            self.use_special_ability()
+        
+        elif choice == '3':
+            self.use_item()
+        
+        elif choice == '4':
+            print("You ran away safely.")
+            return  # Exits the function since the player is running away
+        
+        else:
+            print("Invalid choice. Please try again.")
+        
+        # Check if the player has been defeated
         if not self.player.is_alive():
             print("You have been defeated!")
             self.running = False
+        
+        # Check if the enemy has been defeated
         elif not enemy.is_alive():
             print(f"You defeated {enemy.name}!")
             self.player.gain_experience(enemy.experience_reward)
@@ -278,7 +285,7 @@ if choice == '1':
             elif quest.name == "Orc Invasion" and defeated_enemy.name == "Orc":
                 self.player.complete_quest(quest)
 
-def view_character(self):
+    def view_character(self):
         print(f"\nCharacter Information:")
         print(f"Name: {self.player.name}")
         print(f"Level: {self.player.level}")
@@ -303,7 +310,7 @@ def view_character(self):
             if choice.isdigit() and 0 < int(choice) <= len(self.player.inventory):
                 self.use_item(int(choice) - 1)
             elif choice == '0':
-                return
+                return  # User chose to go back
             else:
                 print("Invalid choice. Please try again.")
         else:
@@ -316,7 +323,9 @@ def view_character(self):
                 print("Invalid item number.")
                 return
             item_index = int(item_index) - 1
+        
         item = self.player.inventory[item_index]
+        
         if isinstance(item, Consumable):
             self.player.use_consumable(item)
             self.player.inventory.pop(item_index)
@@ -327,7 +336,8 @@ def view_character(self):
         elif isinstance(item, Armor):
             self.player.equip_armor(item)
             print(f"You equipped {item.name}.")
-
+        else:
+            print("Unknown item type.")
 
     def use_special_ability(self):
         print("\nAvailable Special Abilities:")
@@ -372,8 +382,7 @@ def view_character(self):
         else:
             print("You don't have enough gold.")
 
-
-def view_quests(self):
+    def view_quests(self):
         print("\nAvailable Quests:")
         for idx, quest in enumerate(self.available_quests):
             print(f"{idx + 1}. {quest}")
